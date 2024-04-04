@@ -2,6 +2,8 @@ from django.db import models
 from django.urls import reverse
 from django.db.models import UniqueConstraint
 from django.db.models.functions import Lower
+from django.conf import settings
+from datetime import date
 import uuid
 
 class Genre(models.Model):
@@ -123,6 +125,17 @@ class BookInstance(models.Model):
         """Create a string for the status of the book instance on Admin."""
         return ', '.join(self.status_str())
     
+    borrower = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True)
+
+    @property
+    def is_overdue(self):
+        """Determines if the book is overdue based on due date and current date."""
+        return bool(self.due_back and date.today() > self.due_back)
+    
+    permissions = (("can_mark_returned", "Set book as returned"),)
+
+
+    
 class Author(models.Model):
     """Model representing an author."""
     first_name = models.CharField(max_length=100)
@@ -140,3 +153,4 @@ class Author(models.Model):
     def __str__(self):
         """String for representing the Model object."""
         return f'{self.last_name}, {self.first_name}'
+    permissions = (("can_mark_returned", "Set book as returned"),)
