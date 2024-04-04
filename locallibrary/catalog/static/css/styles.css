@@ -12,3 +12,14 @@
     margin: 0;
   }
   
+  .sidebar-nav {
+    background-color: antiquewhite;
+  }
+
+  .sidebar-nav .sidebar-nav-link:hover {
+color: blueviolet;
+  }
+
+.p {
+background-color: bisque;
+}
